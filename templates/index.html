@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Injury Risk Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+
+    <div class="container">
+        <h1>⚽ Player Injury Risk Analysis System</h1>
+        <p>Upload a match video, and our AI will analyze player movement to predict potential injury risks.</p>
+        <p>Using advanced deep learning and computer vision, we track sprint count, minutes played, and fatigue level.</p>
+
+        <!-- Fixed Form Action to Match Flask Route -->
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <div class="file-upload">
+                <input type="file" name="video" accept="video/*" required>
+                <button type="submit">Analyze Video</button>
+            </div>
+        </form>
+
+        <div class="info-box">
+            <h2>🔍 How It Works:</h2>
+            <ul>
+                <li>✔️ Upload a video containing player movements.</li>
+                <li>✔️ AI detects players & extracts movement data.</li>
+                <li>✔️ System analyzes sprint intensity and fatigue.</li>
+                <li>✔️ Generates an injury risk report for each player.</li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

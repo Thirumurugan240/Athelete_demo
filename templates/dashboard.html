@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Injury Risk Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🏆 Injury Risk Prediction Dashboard</h1>
+        <p>Below is the analyzed data for each player, including injury risk and playability percentage.</p>
+
+        {% if players %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Player ID</th>
+                    <th>Minutes Played</th>
+                    <th>Sprint Count</th>
+                    <th>Sprint Intensity</th>
+                    <th>Composite Load Score</th>
+                    <th>Fatigue Index</th>
+                    <th>Injury Risk</th>
+                    <th>Playability %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in players %}
+                <tr {% if highest_risk and player.Player_ID == highest_risk.Player_ID %} class="highest-risk" {% endif %}>
+                    <td>{{ player.Player_ID }}</td>
+                    <td>{{ player.Minutes_Played|round(2) }}</td>
+                    <td>{{ player.Sprint_Count }}</td>
+                    <td>{{ player.Sprint_Intensity|round(2) }}</td>
+                    <td>{{ player.Composite_Load_Score|round(2) }}</td>
+                    <td>{{ player.Fatigue_Index|round(2) }}</td>
+                    <td class="{% if player.Injury_Risk > 89 %} risk-high {% else %} risk-low {% endif %}">
+                        {{ "High" if player.Injury_Risk > 89 else "Low" }}
+                    </td>
+                    <td>{{ player.Playability|round(2) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if highest_risk %}
+        <div class="highlight">
+            <h2>🚨 Highest Injury Risk Player</h2>
+            <p><strong>Player ID:</strong> {{ highest_risk.Player_ID }}</p>
+            <p><strong>Risk Score:</strong> {{ highest_risk.Injury_Risk|round(2) }}</p>
+            <p><strong>Predicted Risk:</strong> 
+                <span class="{% if highest_risk.Injury_Risk > 89 %} risk-high {% else %} risk-low {% endif %}">
+                    {{ "High" if highest_risk.Injury_Risk > 89 else "Low" }}
+                </span>
+            </p>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <p>No player data available. Please upload a video for analysis.</p>
+        {% endif %}
+
+        <a href="/" class="back-button">🔙 Upload Another Video</a>
+    </div>
+
+</body>
+</html>

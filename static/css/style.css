@@ -1,0 +1,108 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #141e30, #243b55);
+    color: #ffffff;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 60%;
+    margin: 5% auto;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 255, 255, 0.5);
+}
+
+/* Upload Form */
+h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 16px;
+    color: #ddd;
+}
+
+input[type="file"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #00c6ff;
+    border-radius: 5px;
+    background: #2c3e50;
+    color: white;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    background: #00c6ff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+}
+
+button:hover {
+    background: #005f99;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.9);
+}
+
+th, td {
+    padding: 15px;
+    border-bottom: 1px solid #00c6ff;
+}
+
+th {
+    background: #00c6ff;
+    color: black;
+}
+
+tr:hover {
+    background: rgba(0, 255, 255, 0.2);
+}
+
+/* Risk-based Color Coding */
+.risk-high { background: red; color: white; }
+.risk-medium { background: orange; color: black; }
+.risk-low { background: green; color: white; }
+
+/* Back Button */
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background: #ff9800;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.back-button:hover {
+    background: #e68900;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+    }
+    
+    input[type="file"] {
+        width: 100%;
+    }
+}

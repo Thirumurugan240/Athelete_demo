@@ -1,16 +1,25 @@
 import os
+import subprocess
 import pickle
 import numpy as np
 from flask import Flask, render_template, request, jsonify
+
+try:
+    import gunicorn
+    import xgboost as xgb
+    from sklearn.preprocessing import StandardScaler
+except ImportError:
+    subprocess.run(["pip", "install", "-r", "requirements.txt"])
+
+import gunicorn
+import xgboost as xgb
 from sklearn.preprocessing import StandardScaler
 from video_processor import process_video
-import xgboost as xgb
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "uploads"
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
-# Load model and scaler
 model_path = "xgboost_injury_risk.pkl"
 scaler_path = "scaler.pkl"
 
@@ -121,4 +130,5 @@ def upload_video():
     return jsonify(processed_results)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    from gunicorn.app.wsgiapp import run
+    run()

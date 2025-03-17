@@ -6,13 +6,10 @@ from torchvision import models, transforms
 from PIL import Image
 import torch
 
-# Load YOLO for player detection
 model = YOLO("yolov8n.pt")
 
-# Initialize DeepSORT tracker
 tracker = DeepSort(max_age=50, nn_budget=100, max_iou_distance=0.7)
 
-# Load ResNet50 for feature extraction
 resnet50 = models.resnet50(weights="IMAGENET1K_V1")
 resnet50.fc = torch.nn.Identity()
 resnet50.eval()

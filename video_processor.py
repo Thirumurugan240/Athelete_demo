@@ -37,13 +37,17 @@ def process_video(video_path):
 
     fps = cap.get(cv2.CAP_PROP_FPS)
     if fps == 0.0:
-        fps = 30  # Default FPS
+        fps = 30  
 
-    player_stats = {}  # Store player data by player ID
+
+    global tracker
+    tracker = DeepSort(max_age=50, nn_budget=100, max_iou_distance=0.7)
+    player_stats = {}  
+    ongoing_sprint = {}
+
     frame_id = 0
     sprint_threshold = 7.0
     min_sprint_duration = 3
-    ongoing_sprint = {}
 
     while cap.isOpened():
         ret, frame = cap.read()
@@ -52,7 +56,7 @@ def process_video(video_path):
 
         frame_id += 1
         if frame_id % 3 != 0:
-            continue  # Skip frames for efficiency
+            continue  
 
         results = model(frame)
         detections = []
@@ -60,17 +64,17 @@ def process_video(video_path):
         for result in results:
             for box, conf, cls in zip(result.boxes.xyxy, result.boxes.conf, result.boxes.cls):
                 x1, y1, x2, y2 = map(int, box[:4])
-                if int(cls) == 0 and conf > 0.5:  # Class 0 is person
+                if int(cls) == 0 and conf > 0.5:  
                     detections.append(([x1, y1, x2 - x1, y2 - y1], conf.item(), None))
 
         tracks = tracker.update_tracks(detections, frame=frame)
-        
+
         for track in tracks:
             if not track.is_confirmed():
                 continue
-            
+
             track_id = track.track_id
-            bbox = track.to_ltrb()  # (left, top, right, bottom)
+            bbox = track.to_ltrb()  
             x1, y1, x2, y2 = map(int, bbox)
             center_x, center_y = (x1 + x2) // 2, (y1 + y2) // 2
 
@@ -84,10 +88,9 @@ def process_video(video_path):
                     "Composite_Load_Score": 0,
                     "Injury_History": 0
                 }
-            
-            player_stats[track_id]["Minutes_Played"] = round(frame_id / (fps * 60), 2)
 
-            # Calculate speed for sprint detection
+            player_stats[track_id]["Minutes_Played"] = round(frame_id / (fps * 60), 2)
+            
             if len(player_stats[track_id].get("track_data", [])) > 2:
                 prev_frame, prev_x, prev_y = player_stats[track_id]["track_data"][-2]
                 time_diff = (frame_id - prev_frame) / fps
@@ -98,7 +101,7 @@ def process_video(video_path):
                     else:
                         if ongoing_sprint.get(track_id, 0) >= min_sprint_duration:
                             player_stats[track_id]["Sprint_Count"] += 1
-                        ongoing_sprint[track_id] = 0  # Reset sprint count
+                        ongoing_sprint[track_id] = 0  
 
             player_stats[track_id]["track_data"] = player_stats[track_id].get("track_data", []) + [(frame_id, center_x, center_y)]
 
@@ -109,4 +112,4 @@ def process_video(video_path):
         data["Sprint_Intensity"] = data["Sprint_Count"] / data["Minutes_Played"] if data["Minutes_Played"] > 0 else 0
         data["Composite_Load_Score"] = data["Sprint_Count"] * 1.5
 
-    return list(player_stats.values())  # Convert dict to list
+    return list(player_stats.values())  
